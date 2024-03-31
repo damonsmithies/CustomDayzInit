@@ -53,7 +53,7 @@ void main()
 
 // Add your BuilderItems or DayZ Editor Code Here for building and item placement
 
-class CONFIG
+class config
 {
 
 	// Debug on/off
@@ -150,7 +150,10 @@ class CustomMission: MissionServer
 		getRandomClothes(player);
 	
 		// For debug suicide.
-		player.GetInventory().CreateInInventory("HuntingKnife");
+		if (config._debug)
+		{
+			player.GetInventory().CreateInInventory("HuntingKnife");
+		}
 	}
 };
 
