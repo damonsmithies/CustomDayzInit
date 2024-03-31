@@ -60,23 +60,23 @@ class config
 	const bool _debug = true;
 
 	// Global chance modifier. Use for randomizing items chances unless overridden for a specific random chance item. Treat as a %.
-	const int max_rand = 5; // 5%
+	const int max_chance = 5; // 5%
 
 	// Random chance of spawning with gloves on/off.
 	const bool random_chance_spawn_gloves = true;
-	const int max_rand_override_gloves = 0;
+	const int max_chance_override_gloves = 0;
 
 	// Random chance of spawning with face covering on/off.
 	const bool random_chance_spawn_face = true;
-	const int max_rand_override_face = 0;
+	const int max_chance_override_face = 0;
 
 	// Random chance of spawning with head item on/off.
 	const bool random_chance_spawn_head = true;
-	const int max_rand_override_head = 0;
+	const int max_chance_override_head = 0;
 
 	// Random chance of spawning with bag on/off.
 	const bool random_chance_spawn_bag = true;
-	const int max_rand_override_bag = 0;
+	const int max_chance_override_bag = 0;
 
 };
 
@@ -149,20 +149,24 @@ class CustomMission: MissionServer
 
 	private void getChanceClothes(PlayerBase player)
 	{
+		int chanceGlobal = config.max_chance;
 		if (config.random_chance_spawn_gloves)
 		{
+			// Set chance of gloves.
+			int chanceGloves = config.max_chance_override_gloves
+
 			// Override check for gloves.
-			if(max_rand_override_gloves > 0)
+			if(chanceGloves > 0)
 			{
-				int roll = max_rand_override_gloves;
+				int chanceComparitor = chanceGloves;
 			}
 			else
 			{
-				int roll = config.max_rand;
+				int chanceComparitor = chanceGlobal;
 			}
 
 			// Roll the dice for gloves and add to player on succesfull roll.
-			bool gloves_roll = DiceRoll(roll);
+			bool gloves_roll = DiceRoll(chanceComparitor);
 			if(gloves_roll)
 			{
 				// Spawn random gloves on player.
@@ -172,18 +176,21 @@ class CustomMission: MissionServer
 		}
 		if (config.random_chance_spawn_face)
 		{
+			// Set chance of face.
+			int chanceFace = config.max_chance_override_face
+
 			// Override check for face.
-			if(max_rand_override_face > 0)
+			if(chanceFace > 0)
 			{
-				int roll = max_rand_override_face;
+				int chanceComparitor = chanceFace;
 			}
 			else
 			{
-				int roll = config.max_rand;
+				int chanceComparitor = chanceGlobal;
 			}
 
 			// Roll the dice for face and add to player on succesfull roll.
-			bool face_roll = DiceRoll(roll);
+			bool face_roll = DiceRoll(chanceComparitor);
 			if(face_roll)
 			{
 				// Spawn random face item on player.
@@ -193,18 +200,21 @@ class CustomMission: MissionServer
 		}
 		if (config.random_chance_spawn_head)
 		{
+			// Set chance of head.
+			int chanceHead = config.max_chance_override_head
+
 			// Override check for head.
-			if(max_rand_override_head > 0)
+			if(chanceHead > 0)
 			{
-				int roll = max_rand_override_head;
+				int chanceComparitor = chanceHead;
 			}
 			else
 			{
-				int roll = config.max_rand;
+				int chanceComparitor = chanceGlobal;
 			}
 
 			// Roll the dice for head and add to player on succesfull roll.
-			bool head_roll = DiceRoll(config.max_rand);
+			bool head_roll = DiceRoll(chanceComparitor);
 			if(head_roll)
 			{
 				// Spawn random head item on player.
@@ -214,18 +224,21 @@ class CustomMission: MissionServer
 		}
 		if (config.random_chance_spawn_bag)
 		{
-			// Override check for bag.
-			if(max_rand_override_bag > 0)
+			// Set chance of bag.
+			int chanceBag = config.max_chance_override_bag
+
+			// Override check for gloves.
+			if(chanceBag > 0)
 			{
-				int roll = max_rand_override_bag;
+				int chanceComparitor = chanceBag;
 			}
 			else
 			{
-				int roll = config.max_rand;
+				int chanceComparitor = chanceGlobal;
 			}
-			
+
 			// Roll the dice for bag and add to player on succesfull roll.
-			bool bag_roll = DiceRoll(config.max_rand);
+			bool bag_roll = DiceRoll(chanceComparitor);
 			if(bag_roll)
 			{
 				// Spawn random bag item on player.
