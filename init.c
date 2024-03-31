@@ -59,35 +59,21 @@ class config
 	// Debug on/off
 	const bool _debug = true;
 
-	// Randomise spawn gear on/off.
-	const bool random_spawn_gear = true;
-
-	// Random chance of spawning with extra gear on/off.
-	const bool random_chance_spawn_gear = true;
-
-	// Random chance of spawning with extra items on/off.
-	const bool random_chance_spawn_items = true;
-
-	// Random chance of spawning with extra food or drink on/off.
-	const bool random_chance_spawn_food_drink = true;
-
-	// Random chance of spawning with extra medical on/off.
-	const bool random_chance_spawn_medical = true;
-
 	// Global chance modifier. Use for randomizing items chances. Treat as a %.
-	const int max_rand = 5; // 5%
+	const int max_rand = 50; // 5%
 
-	// Global chance modifier for food and drink.
-	const int food_chance = 5; // 5%
-	const int drink_chance = 5; // 5%
+	// Random chance of spawning with gloves on/off.
+	const bool random_chance_spawn_gloves = true;
 
-	// Global item health modifier. Use for randomising spawned item health.
-	const int min_item_health = 4; // Badly Damaged
-	const int max_item_health = 1; // Pristine
+	// Random chance of spawning with face covering on/off.
+	const bool random_chance_spawn_face = true;
 
-	// Set how many bandages or rags player starts with.
-	const int min_medical_item = 2;
-	const int max_medical_item = 6;
+	// Random chance of spawning with head item on/off.
+	const bool random_chance_spawn_head = true;
+
+	// Random chance of spawning with bag on/off.
+	const bool random_chance_spawn_bag = true;
+
 
 };
 
@@ -116,6 +102,23 @@ class CustomMission: MissionServer
 		}
 	}
 
+	// Dice roll function.
+    static bool DiceRoll(int maxChance)
+    {
+		bool outcome;
+        int roll = Math.RandomInt(0, 100);
+		//bool outcome = (maxChance <= roll) ? true : false;
+		if (maxChance <= roll)
+		{
+			outcome = true;
+		}
+		else
+		{
+			outcome = false;
+		}
+        return outcome;
+    }
+
 	// Set Character into game
 	override PlayerBase CreateCharacter(PlayerIdentity identity, vector pos, ParamsReadContext ctx, string characterName)
 	{
@@ -141,6 +144,54 @@ class CustomMission: MissionServer
 		EntityAI player_shoes = player.GetInventory().CreateInInventory(gear_shoes.GetRandomElement());
 	}
 
+	private void getChanceClothes(PlayerBase player)
+	{
+		if (config.random_chance_spawn_gloves)
+		{
+			// Roll the dice for gloves and add to player on succesfull roll.
+			bool gloves_roll = DiceRoll(config.max_rand);
+			if(gloves_roll)
+			{
+				// Spawn random gloves on player.
+				array<string> gear_gloves = {"WorkingGloves_Black", "WorkingGloves_Brown", "WorkingGloves_Beige" , "WorkingGloves_Yellow"};
+				EntityAI player_gloves = player.GetInventory().CreateInInventory(gear_gloves.GetRandomElement());
+			}
+		}
+		if (config.random_chance_spawn_face)
+		{
+			// Roll the dice for face and add to player on succesfull roll.
+			bool face_roll = DiceRoll(config.max_rand);
+			if(face_roll)
+			{
+				// Spawn random face item on player.
+				array<string> gear_face = {"BandanaMask_BlackPattern", "BandanaMask_CamoPattern", "BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "BandanaMask_RedPattern"};
+				EntityAI player_face = player.GetInventory().CreateInInventory(gear_face.GetRandomElement());
+			}
+		}
+		if (config.random_chance_spawn_head)
+		{
+			// Roll the dice for head and add to player on succesfull roll.
+			bool head_roll = DiceRoll(config.max_rand);
+			if(head_roll)
+			{
+				// Spawn random head item on player.
+				array<string> gear_head = {"Bandana_Blackpattern", "Bandana_Camopattern", "Bandana_Greenpattern", "Bandana_Polkapattern", "Bandana_Redpattern"};
+				EntityAI player_head = player.GetInventory().CreateInInventory(gear_head.GetRandomElement());
+			}
+		}
+		if (config.random_chance_spawn_bag)
+		{
+			// Roll the dice for bag and add to player on succesfull roll.
+			bool bag_roll = DiceRoll(config.max_rand);
+			if(bag_roll)
+			{
+				// Spawn random bag item on player.
+				array<string> gear_bag =  {"CanvasBag_Medical", "CanvasBag_Olive", "DuffelBagSmall_Camo", "DuffelBagSmall_Medical", "Slingbag_Black", "Slingbag_Brown", "Slingbag_Gray"};
+				EntityAI player_bag = player.GetInventory().CreateInInventory(gear_bag.GetRandomElement());
+			}
+		}
+	}
+
 	override void StartingEquipSetup(PlayerBase player, bool clothesChosen)
 	{
 		// Start By removing all default items.
@@ -148,6 +199,9 @@ class CustomMission: MissionServer
 
 		// Get random clothes.
 		getRandomClothes(player);
+
+		// Get chance clothes.
+		getChanceClothes(player);
 	
 		// For debug suicide.
 		if (config._debug)
