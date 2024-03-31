@@ -126,34 +126,28 @@ class CustomMission: MissionServer
 	}
 
 	// https://github.com/ravmustang/DayZ_SA_ClassName_Dump/blob/master/Everything%20DayZ/DayZ%20SA%20Community%20Scripting/PVPLoadout_init.c
-	EntityAI getRandomTop(PlayerBase player)
+	private void getRandomClothes(PlayerBase player)
 	{
+		// Spawn random top on player.
 		array<string> gear_top = {"Shirt_BlueCheck", "Shirt_BlueCheckBright", "Shirt_GreenCheck", "Shirt_PlaneBlack", "Shirt_RedCheck", "Shirt_WhiteCheck"}
 		EntityAI player_top = player.GetInventory().CreateInInventory(gear_top.GetRandomElement());
-		return player_top;
-	}
 
-	EntityAI getRandomPants(PlayerBase player)
-	{
+		// Spawn random pants on player.
 		array<string> gear_pants = {"Jeans_Black", "Jeans_Blue", "Jeans_BlueDark", "Jeans_Brown", "Jeans_Green", "Jeans_Grey"};
 		EntityAI player_pants = player.GetInventory().CreateInInventory(gear_pants.GetRandomElement());
-		return player_pants;
-	}
 
-	EntityAI getRandomShoes(PlayerBase player)
-	{
+		// Spawn random shoes on player.
 		array<string> gear_shoes = {"AthleticShoes_Black", "AthleticShoes_Green", "AthleticShoes_Blue", "AthleticShoes_Brown", "AthleticShoes_Grey"};
 		EntityAI player_shoes = player.GetInventory().CreateInInventory(gear_shoes.GetRandomElement());
-		return player_shoes;
 	}
 
 	override void StartingEquipSetup(PlayerBase player, bool clothesChosen)
 	{
 		// Start By removing all default items.
 		player.RemoveAllItems();
-		getRandomTop(player);
-		getRandomPants(player);
-		getRandomShoes(player);
+
+		// Get random clothes.
+		getRandomClothes(player);
 	
 		// For debug suicide.
 		player.GetInventory().CreateInInventory("HuntingKnife");
